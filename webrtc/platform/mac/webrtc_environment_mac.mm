@@ -561,7 +561,9 @@ bool EnvironmentMac::desktopCaptureAllowed() const {
 		// Even if user grants access, restart is required.
 		static const auto result = CGPreflightScreenCaptureAccess();
 		return result;
-	} else if (@available(macOS 10.15, *)) {
+	}
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 150000
+	else if (@available(macOS 10.15, *)) {
 		const auto stream = CGDisplayStreamCreate(
 			CGMainDisplayID(),
 			1,
@@ -580,6 +582,7 @@ bool EnvironmentMac::desktopCaptureAllowed() const {
 		CFRelease(stream);
 		return true;
 	}
+#endif
 	return true;
 }
 
